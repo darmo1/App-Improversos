@@ -117,7 +117,7 @@ const App = () => {
       setFlagTime(false)
       speechRecognition.abort()
     }
-  }, [timer])
+  })
 
 
   React.useEffect(() => {
