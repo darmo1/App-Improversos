@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { useSpeechRecognition } from './Hooks/useSpeechRecognition'
-import CountDownLevel from './utils/CountDownLevel'
 import "./index.css"
 import distributeWords from './utils/distributeWords'
 import useInterval from './Hooks/useInterval'
@@ -39,19 +38,24 @@ const App = () => {
   }, [start])
 
   //Llamado a la API
-  React.useEffect(async () => {
-    try {
-      const url = 'http://api.datamuse.com/words?sp=*on&v=es'
-      const fetchData = await fetch(url)
+  React.useEffect( () => {
 
-      if (fetchData.status === 200) {
-        const data = await fetchData.json()
-        setWords(data)
-
+    async function fetchData(){
+      try {
+        const url = 'http://api.datamuse.com/words?sp=*on&v=es'
+        const fetchData = await fetch(url)
+  
+        if (fetchData.status === 200) {
+          const data = await fetchData.json()
+          setWords(data)
+  
+        }
+      } catch (err) {
+        return err.message
       }
-    } catch (err) {
-      return err.message
     }
+    fetchData()
+    
   }, [])
 
   //Creación de las palabras de una ronda
@@ -72,7 +76,7 @@ const App = () => {
       }
       setFlagTime(true)
     }
-  }, [countDown])
+  }, [countDown, setFlagTime, speechRecognition])
 
 
   //Acá la lógica para capturar los datos de recognitizion voice
@@ -110,7 +114,7 @@ const App = () => {
       setFlagTime(false)
       speechRecognition.abort()
     }
-  }, [timer])
+  }, [timer, setFlagTime, speechRecognition])
 
 
   React.useEffect(() => {
@@ -119,7 +123,7 @@ const App = () => {
       let id = setInterval(exeFuncion, 10000)
       return () => clearInterval(id)
     }
-  }, [flagTime])
+  }, [flagTime, exeFuncion])
 
 
 
