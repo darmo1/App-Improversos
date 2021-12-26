@@ -3,7 +3,7 @@ import React from 'react'
 import { useSpeechRecognition } from './Hooks/useSpeechRecognition'
 import "./index.css"
 import distributeWords from './utils/distributeWords'
-import useInterval from './Hooks/useInterval'
+
 import AssertWords from './Components/AssertWords'
 const Pista = require('./Components/Pista/freeStylePista.mp3')
 const App = () => {
@@ -17,11 +17,6 @@ const App = () => {
   const [improvise, setImprovise] = React.useState([])
 
   const audio = React.useRef()
-
-  React.useEffect( () => {
-    console.log(audio)
-  }, [])
-
   //Conteo 3,2,1
   const [timer, setTimer] = React.useState(0)
   React.useEffect(() => {
@@ -69,32 +64,30 @@ const App = () => {
   //Cuando el reloj marque 3,2, 1. Empieza el juego
   React.useEffect(() => {
     if (countDown === 0) {
-      speechRecognition.start()
-     // setIsOpenModal(false)
-      speechRecognition.onresult = e => {
-        setScript(e.results[0][0].transcript.toString().toLowerCase())
-      }
       setFlagTime(true)
+      speechRecognition.start()
+      speechRecognition.onresult = e => {
+        setScript( prev => prev + ' ' + e.results[0][0].transcript.toString().toLowerCase())
+      }
+      
     }
-  }, [countDown])
+  },[setFlagTime, countDown,  speechRecognition])
 
 
   //Acá la lógica para capturar los datos de recognitizion voice
-
   const initializeImprovise = () => {
-
     setImprovise(prev => [...prev, script])
     speechRecognition.abort()
-    setScript(() => '')
+    setScript('')
     setSec(prev => Math.min(13, prev + 1))
     speechRecognition.start()
     console.log('volvi a iniciar')
     speechRecognition.onresult = e => {
-      setScript(e.results[0][0].transcript.toString().toLowerCase())
+      setScript( prev => prev + ' ' + e.results[0][0].transcript.toString().toLowerCase())
     }
   }
 
-  const { exeFuncion } = useInterval(initializeImprovise)
+  
   //Empieza el reloj para contar los 120 segundo
   React.useEffect(() => {
     if (flagTime) {
@@ -120,16 +113,28 @@ const App = () => {
   })
 
 
-  React.useEffect(() => {
+ 
+  useInterval(initializeImprovise, 10000)
 
-    if (flagTime) {
-      let id = setInterval(exeFuncion, 10000)
-      return () => clearInterval(id)
+  function useInterval(callback, delay){
+    const savedCallback = React.useRef()
+
+    React.useEffect(() => {
+        savedCallback.current = callback
+    })
+
+    function exeFuncion(){
+        savedCallback.current()
     }
-  }, [flagTime])
 
+    React.useEffect(() => {
+      if (flagTime) {
+        let id = setInterval(exeFuncion, delay)
+        return () => clearInterval(id)
+      }
+    }, [delay])
 
-
+}
 
 
   return (
