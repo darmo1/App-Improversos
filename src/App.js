@@ -76,7 +76,7 @@ const App = () => {
       }
       setFlagTime(true)
     }
-  }, [countDown, setFlagTime, speechRecognition])
+  }, [countDown])
 
 
   //Acá la lógica para capturar los datos de recognitizion voice
@@ -105,6 +105,9 @@ const App = () => {
         clearTimeout(timerId)
       }
     }
+    else{
+      audio.current.pause()
+    }
   }, [flagTime])
 
   //Si es 120 segundo se para el flag y se para el reloj
@@ -114,7 +117,7 @@ const App = () => {
       setFlagTime(false)
       speechRecognition.abort()
     }
-  }, [timer, setFlagTime, speechRecognition])
+  }, [timer])
 
 
   React.useEffect(() => {
@@ -123,14 +126,10 @@ const App = () => {
       let id = setInterval(exeFuncion, 10000)
       return () => clearInterval(id)
     }
-  }, [flagTime, exeFuncion])
+  }, [flagTime])
 
 
 
-
-  React.useEffect(() => {
-    console.log(improvise, 'Es la improvisacion')
-  }, [improvise])
 
 
   return (
