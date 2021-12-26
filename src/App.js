@@ -71,11 +71,11 @@ const App = () => {
       setFlagTime(true)
       speechRecognition.start()
       speechRecognition.onresult = e => {
-        setScript( prev => prev + ' ' + e.results[0][0].transcript.toString().toLowerCase())
+        setScript( e.results[0][0].transcript.toString().toLowerCase())
       }
       
     }
-  },[setFlagTime, countDown,  speechRecognition])
+  },[countDown])
 
 
   //Acá la lógica para capturar los datos de recognitizion voice
@@ -87,7 +87,7 @@ const App = () => {
     speechRecognition.start()
     console.log('volvi a iniciar')
     speechRecognition.onresult = e => {
-      setScript( prev => prev + ' ' + e.results[0][0].transcript.toString().toLowerCase())
+      setScript( e.results[0][0].transcript.toString().toLowerCase())
     }
   }
 
@@ -136,7 +136,7 @@ const App = () => {
         let id = setInterval(exeFuncion, delay)
         return () => clearInterval(id)
       }
-    }, [delay])
+    }, [flagTime])
 
 }
 
