@@ -15,6 +15,7 @@ const App = () => {
   const [sec, setSec] = React.useState(0)
   const [script, setScript] = React.useState('')
   const [improvise, setImprovise] = React.useState([])
+  const [ error, setError ] = React.useState('')
 
   const audio = React.useRef()
   //Conteo 3,2,1
@@ -45,8 +46,11 @@ const App = () => {
           setWords(data)
   
         }
+        else{
+          setError('Hubo un error')
+        }
       } catch (err) {
-        return err.message
+        return setError(err.message)
       }
     }
     fetchData()
@@ -173,6 +177,8 @@ const App = () => {
         </div>
 
         : null}
+
+        { error !== ""  ? <div>{error}</div> : null }
 
       
 
