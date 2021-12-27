@@ -5,8 +5,8 @@ export const useSpeechRecognition = () => {
 
     const [ start , setStart ] = React.useState(false)
     const [flagTime, setFlagTime] = React.useState(false)
-
-    const speechRecognition = new window.webkitSpeechRecognition();
+    const SpeechRecognition =  window.webkitSpeechRecognition || window.SpeechRecognition
+    const speechRecognition = new SpeechRecognition()
     speechRecognition.lang = 'es-ES';
     speechRecognition.continuous = true;
     speechRecognition.interimResults = true;
