@@ -75,6 +75,7 @@ const App = () => {
       }
       
     }
+    // eslint-disable-next-line
   },[countDown])
 
 
@@ -136,6 +137,7 @@ const App = () => {
         let id = setInterval(exeFuncion, delay)
         return () => clearInterval(id)
       }
+      // eslint-disable-next-line 
     }, [flagTime])
 
 }
